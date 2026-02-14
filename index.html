@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Dear, Marc</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <audio id="bgMusic" src="Music/Yeek - Heaven.mp3" preload="auto" loop></audio>
+    <button class="music-toggle hidden" id="musicToggleBtn" type="button">mute</button>
+
+    <!-- Envelope Screen -->
+    <div class="letter-container" id="envelopeScreen">
+      <p class="click-text">Open me!</p>
+      <img src="images/envelope.png" alt="Letter" class="letter-image" id="letter">
+    </div>
+
+    <!-- Message Modal -->
+    <div class="modal" id="messageModal">
+      <div class="modal-content">
+        <div class="message-box">
+          <p class="message-text">
+            Dear Marc,<br><br>
+            I'm so happy to be celebrating our first Valentine's day together. 
+            I still think about how weird it was that we came across each other, 
+            and what a strange time it was when we met. A year ago from today, 
+            I would have never thought that this would happen to me, but I 
+            couldn't ask for any less. I wish I was there with you in person 
+            to celebrate, it sucks that we're split through a screen. But, 
+            there's nothing that I would change about what we have right now, 
+            and I'm so incredibly grateful to have you. I'm sorry this is so
+            last minute, and this definitely didn't turn out the way I wanted it
+            to, but I hope you love it. I still miss you everyday, I think about
+            you constantly, and I still get butterflies in my stomach sometimes
+            when I talk to you, like how I felt when I first met you. Love you so much,
+            can't wait to see you soon!<br><br>
+            Love,<br>
+            Bryan
+          </p>
+          <button class="continue-btn" id="continueBtn">Close Letter</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Question Screen -->
+    <div class="question-screen hidden" id="questionScreen">
+      <div class="question-container">
+        <h1 class="question-text">will u be my valentine?</h1>
+        <div class="button-container">
+          <button class="yes-btn" id="yesBtn">yes!</button>
+          <button class="no-btn" id="noBtn">no.</button>
+        </div>
+        <p class="response hidden" id="response"></p>
+        <img class="celebration-gif hidden" id="celebrationGif" src="images/1ca5ba6ee4774c4a595b2a859bc7c8e3.gif" alt="Celebration">
+        <button class="start-over-btn hidden" id="startOverBtn">start over</button>
+      </div>
+    </div>
+    
+    <script src="main.js"></script>
+  </body>
+</html>
