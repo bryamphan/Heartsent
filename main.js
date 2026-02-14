@@ -10,7 +10,12 @@
   const response = document.getElementById('response');
   const startOverBtn = document.getElementById('startOverBtn');
   const bgMusic = document.getElementById('bgMusic');
+  const goofMusic = document.getElementById('goofMusic');
   const musicToggleBtn = document.getElementById('musicToggleBtn');
+  const wrongAnswerSfx = document.getElementById('wrongAnswerSfx');
+
+  // Track which audio the toggle button should control
+  let activeMusic = bgMusic;
 
   let answered = false;
   let noClickCount = 0;
@@ -31,10 +36,11 @@
 
       // Start music on first user gesture (required by most browsers)
       if (bgMusic) {
+        activeMusic = bgMusic;
         bgMusic.play().then(() => {
           if (musicToggleBtn) {
             musicToggleBtn.classList.remove('hidden');
-            musicToggleBtn.textContent = bgMusic.muted ? 'unmute' : 'mute';
+            musicToggleBtn.textContent = activeMusic && activeMusic.muted ? 'unmute' : 'mute';
           }
         }).catch(() => {
           // If autoplay is blocked for any reason, user can still press the toggle later
@@ -48,16 +54,19 @@
   }
 
   // Mute / unmute music
-  if (musicToggleBtn && bgMusic) {
+  if (musicToggleBtn) {
     musicToggleBtn.addEventListener('click', function() {
+      if (!activeMusic) return;
+
       // If music hasn't started yet, try to start it
-      if (bgMusic.paused) {
-        bgMusic.play().catch(() => {
+      if (activeMusic.paused) {
+        activeMusic.play().catch(() => {
           // ignore
         });
       }
-      bgMusic.muted = !bgMusic.muted;
-      musicToggleBtn.textContent = bgMusic.muted ? 'unmute' : 'mute';
+
+      activeMusic.muted = !activeMusic.muted;
+      musicToggleBtn.textContent = activeMusic.muted ? 'unmute' : 'mute';
     });
   }
 
@@ -123,6 +132,19 @@
     noBtn.addEventListener('click', function(e) {
       if (!answered) {
         e.preventDefault();
+
+        // Play the "wrong answer" sound effect (restart it each click)
+        if (wrongAnswerSfx) {
+          try {
+            wrongAnswerSfx.currentTime = 0;
+            wrongAnswerSfx.play().catch(() => {
+              // ignore (browser may block if not considered a user gesture)
+            });
+          } catch {
+            // ignore
+          }
+        }
+
         handleNoButton();
       }
     });
@@ -133,6 +155,24 @@
     yesBtn.addEventListener('click', function() {
       if (answered) return;
       answered = true;
+
+      // Stop background music and play the goof track
+      if (bgMusic) {
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
+      }
+      if (goofMusic) {
+        activeMusic = goofMusic;
+        goofMusic.currentTime = 0;
+        goofMusic.muted = bgMusic ? bgMusic.muted : goofMusic.muted;
+        goofMusic.play().catch(() => {
+          // ignore
+        });
+        if (musicToggleBtn) {
+          musicToggleBtn.classList.remove('hidden');
+          musicToggleBtn.textContent = goofMusic.muted ? 'unmute' : 'mute';
+        }
+      }
 
       // Get elements
       const celebrationGif = document.getElementById('celebrationGif');
@@ -193,7 +233,12 @@
       messageModal.classList.remove('show');
 
       // Reset music to start
+      if (goofMusic) {
+        goofMusic.pause();
+        goofMusic.currentTime = 0;
+      }
       if (bgMusic) {
+        activeMusic = bgMusic;
         bgMusic.currentTime = 0;
         // keep playing (optional); comment out next line if you want it to stop
         // bgMusic.pause();
